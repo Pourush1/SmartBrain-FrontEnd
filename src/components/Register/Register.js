@@ -59,7 +59,7 @@ class Register extends React.Component {
               <legend className="f6 fw6 ph0 mh0">Register</legend>
               <div className="mt3">
                 <label className="db fw6 lh-copy f6" htmlFor="name">
-                  Name
+                  PersonName
                 </label>
                 <input
                   onChange={this.onNameChange}
