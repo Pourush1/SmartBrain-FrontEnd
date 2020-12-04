@@ -1,14 +1,15 @@
-import React, { Component } from "react";
-import "./App.css";
-import Navigation from "./components/Navigation/Navigation";
-import Logo from "./components/Logo/Logo";
-import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
-import Rank from "./components/Rank/Rank";
-import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
-import Particles from "react-particles-js";
-import SignIn from "./components/SignIn/SignIn";
-import Register from "./components/Register/Register";
+import React, { Component } from 'react'
+import './App.css'
+import Navigation from './components/Navigation/Navigation'
+import Logo from './components/Logo/Logo'
+import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm'
+import Rank from './components/Rank/Rank'
+import FaceRecognition from './components/FaceRecognition/FaceRecognition'
+import Particles from 'react-particles-js'
+import SignIn from './components/SignIn/SignIn'
+import Register from './components/Register/Register'
 
+console.log('test')
 // initialize with your api key. This will also work in your browser via http://browserify.org/
 
 const particlesOptions = {
@@ -42,19 +43,19 @@ const particlesOptions = {
     move: {
       random: true,
       speed: 1,
-      direction: "top",
-      out_mode: "out"
+      direction: 'top',
+      out_mode: 'out'
     }
   },
   interactivity: {
     events: {
       onhover: {
         enable: true,
-        mode: "bubble"
+        mode: 'bubble'
       },
       onclick: {
         enable: true,
-        mode: "repulse"
+        mode: 'repulse'
       }
     },
     modes: {
@@ -70,26 +71,26 @@ const particlesOptions = {
       }
     }
   }
-};
+}
 
 const initialState = {
-  input: "",
-  imageLinkUrl: "",
+  input: '',
+  imageLinkUrl: '',
   box: {},
-  route: "signin",
+  route: 'signin',
   isSignedIn: false,
   user: {
-    id: "",
-    name: "",
-    email: "",
+    id: '',
+    name: '',
+    email: '',
     entries: 0,
-    joined: ""
+    joined: ''
   }
-};
+}
 class App extends Component {
   constructor() {
-    super();
-    this.state = initialState;
+    super()
+    this.state = initialState
   }
 
   //Fetching data from our backend
@@ -109,40 +110,39 @@ class App extends Component {
         entries: data.entries,
         joined: data.joined
       }
-    });
-  };
+    })
+  }
 
   calculateFaceLocation = data => {
-    const clarifyFace =
-      data.outputs[0].data.regions[0].region_info.bounding_box;
-    const image = document.getElementById("inputImage");
-    const width = Number(image.width);
-    const height = Number(image.height);
+    const clarifyFace = data.outputs[0].data.regions[0].region_info.bounding_box
+    const image = document.getElementById('inputImage')
+    const width = Number(image.width)
+    const height = Number(image.height)
     //this object is what going to fill the box object
     return {
       leftCol: clarifyFace.left_col * width,
       topRow: clarifyFace.top_row * height,
       rightCol: width - clarifyFace.right_col * width,
       bottomRow: height - clarifyFace.bottom_row * height
-    };
-  };
+    }
+  }
 
   displayFaceBox = box => {
-    console.log(box);
-    this.setState({ box: box });
-  };
+    console.log(box)
+    this.setState({ box: box })
+  }
 
   onInputChange = event => {
-    this.setState({ input: event.target.value });
+    this.setState({ input: event.target.value })
     // console.log(event.target.value);
-  };
+  }
 
   onPictureSubmit = () => {
-    this.setState({ imageLinkUrl: this.state.input });
+    this.setState({ imageLinkUrl: this.state.input })
     // Predict the contents of an image by passing in a URL.
-    fetch("https://fierce-springs-21683.herokuapp.com/imageLinkUrl", {
-      method: "post",
-      headers: { "Content-Type": "application/json" },
+    fetch('https://fierce-springs-21683.herokuapp.com/imageLinkUrl', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         input: this.state.input
       })
@@ -150,9 +150,9 @@ class App extends Component {
       .then(response => response.json())
       .then(response => {
         if (response) {
-          fetch("https://fierce-springs-21683.herokuapp.com/image", {
-            method: "put",
-            headers: { "Content-Type": "application/json" },
+          fetch('https://fierce-springs-21683.herokuapp.com/image', {
+            method: 'put',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               id: this.state.user.id
             })
@@ -166,25 +166,25 @@ class App extends Component {
                 //   entries: count
                 // }
                 Object.assign(this.state.user, { entries: count })
-              );
+              )
             })
-            .catch(console.log); //we can do console.log to see what is sent back
+            .catch(console.log) //we can do console.log to see what is sent back
         }
-        this.displayFaceBox(this.calculateFaceLocation(response));
+        this.displayFaceBox(this.calculateFaceLocation(response))
       })
       .catch(err => {
-        console.log(err);
-      });
-  };
+        console.log(err)
+      })
+  }
 
   onRouteChange = route => {
-    if (route === "signout") {
-      this.setState(initialState); //when signing out we want to set the state to the intial state, so that it won't have info of previous user
-    } else if (route === "home") {
-      this.setState({ isSignedIn: true });
+    if (route === 'signout') {
+      this.setState(initialState) //when signing out we want to set the state to the intial state, so that it won't have info of previous user
+    } else if (route === 'home') {
+      this.setState({ isSignedIn: true })
     }
-    this.setState({ route: route });
-  };
+    this.setState({ route: route })
+  }
 
   render() {
     return (
@@ -195,7 +195,7 @@ class App extends Component {
           onRouteChange={this.onRouteChange}
         />
 
-        {this.state.route === "home" ? (
+        {this.state.route === 'home' ? (
           <div>
             <Logo />
             <Rank
@@ -211,7 +211,7 @@ class App extends Component {
               box={this.state.box}
             />
           </div>
-        ) : this.state.route === "signin" ? (
+        ) : this.state.route === 'signin' ? (
           <SignIn loadUser={this.loadUser} onRouteChange={this.onRouteChange} />
         ) : (
           <Register
@@ -222,8 +222,8 @@ class App extends Component {
         //These multiple components must be wrapped inside a div
         }
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
